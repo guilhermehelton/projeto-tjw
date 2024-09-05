@@ -1,6 +1,5 @@
 .sidebar {
-    background-color: #fff;
-    color: #646cff;
+    background-color: #24244e;
     height: 100vh;
     width: 100%;
     display: flex;
@@ -10,13 +9,14 @@
 }
 
 .sidebar h2 {
+    color: #fff;
     font-size: 1.2em;
 }
 
 .nav-button {
-    background-color: #646cff;
-    color: #fff;
-    border-radius: 4px;
+    background-color: transparent;
+    color: #ddd;
+    border-radius: 2px;
     padding: .5em 1em;
     margin-top: 1em;
     font-weight: 500;
@@ -28,9 +28,14 @@
     gap: .5em
 }
 
+.nav-button.active {
+    background-color: #55a8fd;
+    color: #fff;
+}
+
 .nav-button:hover {
     cursor: pointer;
-    transition: ease-in;
-    background-color: #535bf2;
+    transition: ease-in 250ms;
+    background-color: #55a8fd;
     color: #fff;
 }

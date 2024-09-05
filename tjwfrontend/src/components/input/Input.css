@@ -1,0 +1,26 @@
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: #24244e;
+}
+
+.input-wrapper label {
+    font-size: .9em;
+}
+
+.input-wrapper input {
+    font-family: "Roboto mono";
+    background-color: #fff;
+    padding: .5em;
+    color: #000;
+    border: #222 1px solid;
+    border-radius: 3px;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border: #55a8fd 1px solid;
+    box-shadow: 1px 1px 2px #55a8fd;
+}
