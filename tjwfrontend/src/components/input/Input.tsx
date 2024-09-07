@@ -15,9 +15,9 @@ const Input = (props: propsType) => {
     const {id, className, value, name, placeholder, label, onChange} = props;
 
     return (
-        <div className="input-wrapper">
+        <div className={`input-wrapper ${className}`}>
             <label>{label}</label>
-            <input className={className} id={id} name={name} value={value} placeholder={placeholder} onChange={e => onChange(e)}/>
+            <input id={id} name={name} value={value} placeholder={placeholder} onChange={e => onChange(e)}/>
         </div>
     )
 }
