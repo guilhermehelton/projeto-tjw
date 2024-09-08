@@ -6,9 +6,18 @@ const SideBar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const getRootPath = (path: string) => {
+        let rootPath = path.split("/");
+        if(rootPath[1] != "") {
+            return rootPath[1];
+        }
+        return "/";
+    }
+
     const navButton = (props: any) => {
         return (
-            <a className={`nav-button ${location.pathname == props.path ? 'active' : ''}`} onClick={() => navigate(props.path)}>
+            <a className={`nav-button ${getRootPath(location.pathname) == getRootPath(props.path) ? 'active' : ''}`}
+            onClick={() => navigate(props.path)}>
                 <i className={`fa ${props.icon}`} />
                 {props.name}
             </a>
@@ -18,8 +27,8 @@ const SideBar = () => {
     return (
         <div className="sidebar">
             <h2>Sistema Acadêmico</h2>
-            {navButton({ name: 'Aluno', icon: 'fa-home', path: '/' })}
-            {navButton({ name: 'Turma', icon: 'fa-users' })}
+            {navButton({ name: 'Aluno', icon: 'fa-home', path: '/aluno' })}
+            {navButton({ name: 'Turma', icon: 'fa-users', path: '/turma' })}
             {navButton({ name: 'Professor', icon: 'fa-briefcase', path: '/professor' })}
 
         </div>

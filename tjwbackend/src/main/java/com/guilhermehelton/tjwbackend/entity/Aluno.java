@@ -31,8 +31,14 @@ public class Aluno {
     @Column(name = "nome", nullable = false, length = 64)
     private String nome;
 
-    @Column(name = "registro", nullable = false, length = 64)
-    private String registro;
+    @Column(name = "cpf", nullable = false, length = 64)
+    private String cpf;
+
+    @Column(name = "email", nullable = false, length = 64)
+    private String email;
+
+    @Column(name = "telefone", nullable = false, length = 32)
+    private String telefone;
 
     @OneToMany
     @JoinTable(name = "tbl_matricula", joinColumns = @JoinColumn(name = "id_turma"), inverseJoinColumns = @JoinColumn(name = "id_aluno"))

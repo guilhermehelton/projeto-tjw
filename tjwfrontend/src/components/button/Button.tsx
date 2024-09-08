@@ -4,12 +4,14 @@ import "./Button.css";
 type ButtonProps = {
     isSecondary?: boolean,
     className?: string,
-    name: string
+    name: string,
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void,
 }
 
 const Button = (props: ButtonProps) => {
     return (
-        <button className={`form-button ${props.isSecondary ? 'secondary' : ''} ${props.className}`}>{props.name}</button>
+        <button onClick={(e) => props.onClick(e)}
+            className={`form-button ${props.isSecondary ? 'secondary' : ''} ${props.className}`}>{props.name}</button>
     )
 }
 

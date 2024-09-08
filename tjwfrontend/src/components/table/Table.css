@@ -1,0 +1,34 @@
+.table {
+    border-collapse: collapse;
+    width: 80%;
+}
+
+.table thead{
+    border-bottom: 1px solid #24244e;
+}
+
+.table tbody {
+    text-align: center;
+    line-height: 2;
+}
+
+.table tbody .icon-button {
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+.table tbody .icon-button:hover {
+    background-color: #ddddddad;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    cursor: pointer;
+}

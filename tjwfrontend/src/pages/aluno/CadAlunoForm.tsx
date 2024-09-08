@@ -1,34 +1,53 @@
-import React, { useState } from "react";
+import React from "react";
 import './CadAlunoForm.css';
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
+import { useNavigate } from "react-router-dom";
+import { getAluno, postCriarAluno, setCampoAluno } from "./alunoSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
 const CadAlunoForm = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const aluno = useAppSelector(getAluno);
 
-    const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
+    const getCampoNameValue = (event : React.ChangeEvent<HTMLInputElement>) => {
+        const campo = {
+            id: event.target.id,
+            value: event.target.value
+        }
+        return campo
+    }
+
+    const handleCadastrar = () => {
+        dispatch(postCriarAluno(aluno));
+        navigate('/aluno')
+    }
 
     return (
         <div className="form-container">
             <h2>Cadastro de aluno</h2>
 
             <div className="form-row">
-                <Input className="no-margin-left" id="nome" name="nome" label="Nome" value={nome}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNome(e.target.value)} />
-                    <Input id="email" name="email" label="E-mail" value={nome}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNome(e.target.value)} />
+                <Input className="no-margin-left" id="nome" name="nome" label="Nome" value={aluno.nome ? aluno.nome : ''}
+                    onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
+                <Input id="email" name="email" label="E-mail" value={aluno.email ? aluno.email : ''}
+                    onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
             </div>
             <div className="form-row">
-                <Input className="no-margin-left" id="cpf" name="cpf" label="CPF" placeholder="###.###.###-##" value={cpf}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)} />
-                <Input id="tel" name="telefone" label="Telefone" placeholder="(DD)xxxxx-xxxx" value={cpf}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)} />
-                <Input id="dataNascimento" name="dataNascimento" label="Data de nascimento" placeholder="dd/MM/yyyy" value={cpf}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)} />
+                <Input className="no-margin-left" id="cpf" name="cpf" label="CPF" placeholder="###.###.###-##"
+                    value={aluno.cpf ? aluno.cpf : ''}
+                    onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
+                <Input id="telefone" name="telefone" label="Telefone" placeholder="(DD)xxxxx-xxxx"
+                    value={aluno.telefone ? aluno.telefone : ''}
+                    onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
+                <Input id="dataNascimento" name="dataNascimento" label="Data de nascimento" placeholder="dd/MM/yyyy"
+                    value={aluno.dataNascimento ? aluno.dataNascimento : ''}
+                    onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
             </div>
             <div className="form-row">
-                <Button className="no-margin-left" isSecondary name="Cancelar"/>
-                <Button name="Confirmar"/>
+                <Button onClick={(_e) => navigate("/aluno")} className="no-margin-left" isSecondary name="Cancelar"/>
+                <Button onClick={(_e) => handleCadastrar()} name="Confirmar"/>
             </div>
         </div>
     )
