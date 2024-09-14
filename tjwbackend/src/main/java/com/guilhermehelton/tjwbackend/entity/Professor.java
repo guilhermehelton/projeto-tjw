@@ -3,6 +3,8 @@ package com.guilhermehelton.tjwbackend.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +31,7 @@ public class Professor {
     @Column(name = "nome", nullable = false, length = 64)
     private String nome;
 
-    @Column(name = "cpf", nullable = false, length = 11)
+    @Column(name = "cpf", nullable = false, length = 64)
     private String cpf;
 
     @Column(name = "email", nullable = false, length = 64)
@@ -42,5 +44,6 @@ public class Professor {
     private LocalDate dataNascimento;
 
     @OneToMany(mappedBy = "professor")
+    @JsonIgnore
     private List<Turma> leciona;
 }

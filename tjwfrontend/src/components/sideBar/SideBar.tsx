@@ -29,6 +29,7 @@ const SideBar = () => {
             <h2>Sistema Acadêmico</h2>
             {navButton({ name: 'Aluno', icon: 'fa-home', path: '/aluno' })}
             {navButton({ name: 'Turma', icon: 'fa-users', path: '/turma' })}
+            {navButton({ name: 'Disciplina', icon: 'fa-book', path: '/disciplina' })}
             {navButton({ name: 'Professor', icon: 'fa-briefcase', path: '/professor' })}
 
         </div>

@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 import com.guilhermehelton.tjwbackend.dto.AlunoInputTO;
 import com.guilhermehelton.tjwbackend.entity.Aluno;
 import com.guilhermehelton.tjwbackend.repository.AlunoRepository;
+import com.guilhermehelton.tjwbackend.repository.MatriculaRepository;
 import com.guilhermehelton.tjwbackend.utils.DateUtils;
 
 @Service
 public class AlunoService {
     @Autowired
     private AlunoRepository repository;
+
+    @Autowired
+    private MatriculaRepository matriculaRepository;
 
     public Aluno salvarAluno(AlunoInputTO aluno) {
         Aluno novoAluno = new Aluno();
@@ -50,5 +54,13 @@ public class AlunoService {
         }
 
         return null;
+    }
+
+    public void removerAluno(Long id) {
+        Optional<Aluno> aluno = repository.findById(id);
+        if(aluno.isPresent()) {
+            matriculaRepository.deleteAllByIdAluno(id);
+            repository.deleteById(id);
+        }
     }
 }

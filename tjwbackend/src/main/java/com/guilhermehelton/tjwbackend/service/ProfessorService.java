@@ -8,13 +8,18 @@ import org.springframework.stereotype.Service;
 
 import com.guilhermehelton.tjwbackend.dto.ProfessorInputTO;
 import com.guilhermehelton.tjwbackend.entity.Professor;
+import com.guilhermehelton.tjwbackend.entity.Turma;
 import com.guilhermehelton.tjwbackend.repository.ProfessorRepository;
+import com.guilhermehelton.tjwbackend.repository.TurmaRepository;
 import com.guilhermehelton.tjwbackend.utils.DateUtils;
 
 @Service
 public class ProfessorService {
     @Autowired
     private ProfessorRepository repository;
+
+    @Autowired
+    private TurmaRepository turmaRepository;
 
     public Professor salvaProfessor(ProfessorInputTO professor) {
         Professor novoProfessor = new Professor();
@@ -43,9 +48,25 @@ public class ProfessorService {
             novoProfessor.setDataNascimento(DateUtils.convertStringToLocalDate(professor.getDataNascimento()));
             novoProfessor.setCpf(professor.getCpf());
 
-            return novoProfessor;
+            Professor professorSalvo = repository.save(novoProfessor);
+
+            return professorSalvo;
         }
 
         return null;
+    }
+
+    public void removerProfessor(Long id) {
+        Optional<Professor> professor = repository.findById(id);
+        if(professor.isPresent()) {
+            List<Turma> turmas = turmaRepository.findByProfessor(professor.get());
+
+            for(Turma turma : turmas) {
+                turma.setProfessor(null);
+                turmaRepository.save(turma);
+            }
+
+            repository.deleteById(id);
+        }
     }
 }

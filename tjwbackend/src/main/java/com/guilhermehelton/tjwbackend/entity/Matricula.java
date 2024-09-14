@@ -1,5 +1,8 @@
 package com.guilhermehelton.tjwbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,13 +24,16 @@ import lombok.Setter;
 public class Matricula {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_aluno")
-    private Aluno idAluno;
+    @JsonUnwrapped
+    private Aluno aluno;
 
     @ManyToOne
     @JoinColumn(name = "id_turma")
-    private Turma idTurma;
+    @JsonIgnore
+    private Turma turma;
 }

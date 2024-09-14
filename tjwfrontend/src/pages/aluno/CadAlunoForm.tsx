@@ -3,15 +3,16 @@ import './CadAlunoForm.css';
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
-import { getAluno, postCriarAluno, setCampoAluno } from "./alunoSlice";
+import { ACAO_ATUALIZAR, ACAO_CADASTRAR, getAcao, getAluno, postCriarAluno, putAtualizarAluno, setCampoAluno } from "./alunoSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
 const CadAlunoForm = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const aluno = useAppSelector(getAluno);
+    const acao = useAppSelector(getAcao);
 
-    const getCampoNameValue = (event : React.ChangeEvent<HTMLInputElement>) => {
+    const getCampoNameValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         const campo = {
             id: event.target.id,
             value: event.target.value
@@ -20,13 +21,17 @@ const CadAlunoForm = () => {
     }
 
     const handleCadastrar = () => {
-        dispatch(postCriarAluno(aluno));
+        if (acao == ACAO_ATUALIZAR && aluno.id != undefined) {
+            dispatch(putAtualizarAluno(aluno.id, aluno));
+        } else if (acao == ACAO_CADASTRAR) {
+            dispatch(postCriarAluno(aluno));
+        }
         navigate('/aluno')
     }
 
     return (
         <div className="form-container">
-            <h2>Cadastro de aluno</h2>
+            <h2>{acao == ACAO_CADASTRAR ? 'Cadastro de aluno' : 'Atualizar aluno'}</h2>
 
             <div className="form-row">
                 <Input className="no-margin-left" id="nome" name="nome" label="Nome" value={aluno.nome ? aluno.nome : ''}
@@ -46,8 +51,8 @@ const CadAlunoForm = () => {
                     onChange={(e) => dispatch(setCampoAluno(getCampoNameValue(e)))} />
             </div>
             <div className="form-row">
-                <Button onClick={(_e) => navigate("/aluno")} className="no-margin-left" isSecondary name="Cancelar"/>
-                <Button onClick={(_e) => handleCadastrar()} name="Confirmar"/>
+                <Button onClick={(_e) => navigate("/aluno")} className="no-margin-left" isSecondary name="Cancelar" />
+                <Button onClick={(_e) => handleCadastrar()} name="Confirmar" />
             </div>
         </div>
     )

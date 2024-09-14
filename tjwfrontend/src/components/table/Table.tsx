@@ -5,7 +5,7 @@ type TableProps = {
     keys: string[],
     list: any[],
     children: React.ReactNode[],
-    actions: (data : any) => ActionType[]
+    actions?: (data: any) => ActionType[]
 }
 
 export type ActionType = {
@@ -28,20 +28,26 @@ const Table = (props: TableProps) => {
                         return (
                             <tr key={index}>
                                 {
-                                    props.keys.map(key => (
-                                        <td>{data[key]}</td>
+                                    props.keys.map((key, index) => (
+                                        <td key={index}>{data[key]}</td>
                                     ))
                                 }
-                                <td>
-                                    <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                                        <div className="icon-button" onClick={(_e) => props.actions(data)[0].onClick()}>
-                                            <i className="fa fa-pencil" />
-                                        </div>
-                                        <div className="icon-button" onClick={(_e) => props.actions(data)[1].onClick()}>
-                                            <i className="fa fa-trash" />
-                                        </div>
-                                    </div>
-                                </td>
+                                {
+                                    props.actions ?
+                                        <td key={'action-btn'}>
+                                            <div id="action-buttons" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                                                <div id="update-button" className="icon-button"
+                                                onClick={(_e) => props.actions ? props.actions(data)[0].onClick() : null}>
+                                                    <i className="fa fa-pencil" />
+                                                </div>
+                                                <div id="delete-button" className="icon-button"
+                                                onClick={(_e) => props.actions ? props.actions(data)[1].onClick() : null}>
+                                                    <i className="fa fa-trash" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        : null
+                                }
                             </tr>
                         )
                     })

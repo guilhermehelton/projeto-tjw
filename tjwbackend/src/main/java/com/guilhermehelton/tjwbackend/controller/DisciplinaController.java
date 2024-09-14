@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.guilhermehelton.tjwbackend.dto.DisciplinaInputTO;
 import com.guilhermehelton.tjwbackend.entity.Disciplina;
 import com.guilhermehelton.tjwbackend.service.DisciplinaService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,5 +36,10 @@ public class DisciplinaController {
     @PutMapping("atualizar/{id}")
     public Disciplina atualizarDisciplina(@PathVariable Long id, @RequestBody DisciplinaInputTO disciplina) {
         return service.atualizarDisciplina(id, disciplina.getNome());
+    }
+
+    @DeleteMapping("{id}")
+    public void removerDisciplina(@PathVariable Long id) {
+        service.removerDisciplina(id);
     }
 }

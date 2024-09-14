@@ -18,5 +18,6 @@ import lombok.Setter;
 public class TurmaInputTO {
     private Disciplina disciplina;
     private Professor professor;
+    private String semestre;
     private List<Aluno> alunos;
 }

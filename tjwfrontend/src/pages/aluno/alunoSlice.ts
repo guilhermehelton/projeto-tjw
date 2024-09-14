@@ -14,6 +14,9 @@ export type AlunoType = {
 
 const BACKEND_URL = 'http://localhost:9001/aluno';
 
+export const ACAO_CADASTRAR = 'CADASTRAR_ALUNO';
+export const ACAO_ATUALIZAR = 'ATUALIZAR_ALUNO';
+
 const slice = createSlice({
     name: 'aluno',
     initialState: {
@@ -25,6 +28,7 @@ const slice = createSlice({
             telefone: '',
             dataNascimento: '',
         } as AlunoType,
+        acao: null
     },
     reducers: {
         setAluno: (state, action) => {
@@ -42,11 +46,14 @@ const slice = createSlice({
         },
         limparAluno: (state) => {
             state.aluno = {} as AlunoType;
+        },
+        setAcao: (state, action) => {
+            state.acao = action.payload;
         }
     }
 })
 
-export const { setAluno, setListaAlunos, setCampoAluno, limparAluno } = slice.actions;
+export const { setAluno, setListaAlunos, setCampoAluno, limparAluno, setAcao } = slice.actions;
 
 export const consultarAlunos = () => (dispatch : AppDispatch) => {
     axios.get(BACKEND_URL + '/')
@@ -64,7 +71,24 @@ export const postCriarAluno = (aluno : AlunoType) => (dispatch : AppDispatch) =>
     )
 }
 
+export const putAtualizarAluno = (id: number, aluno: AlunoType) => (dispatch: AppDispatch) => {
+    axios.put(BACKEND_URL + `/atualizar/${id}`, aluno)
+        .then(_response => {
+            dispatch(consultarAlunos());
+            dispatch(limparAluno());
+            dispatch(setAcao(null));
+        })
+}
+
+export const deleteAluno = (id: number) => (dispatch: AppDispatch) => {
+    axios.delete(BACKEND_URL + `/${id}`)
+        .then(_response => {
+            dispatch(consultarAlunos());
+        })
+}
+
 export const getAluno = (state: RootState) => state.alunoSlice.aluno;
 export const getListaAlunos = (state: RootState) => state.alunoSlice.listaAlunos;
+export const getAcao = (state: RootState) => state.alunoSlice.acao;
 
 export default slice.reducer;

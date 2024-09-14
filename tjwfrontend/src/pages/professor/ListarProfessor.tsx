@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { consultarProfessores, getListaProfessores, limparProfessor, ProfessorType, setProfessor } from "./professorSlice";
+import { ACAO_ATUALIZAR, ACAO_CADASTRAR, consultarProfessores, deleteProfessor, getListaProfessores, limparProfessor, ProfessorType, setAcao, setProfessor } from "./professorSlice";
 import Button from "../../components/button/Button";
 import Table, { ActionType } from "../../components/table/Table";
 
@@ -15,6 +15,7 @@ const ListarProfessor = () => {
     }, [])
 
     const handleCadastrar = () => {
+        dispatch(setAcao(ACAO_CADASTRAR));
         dispatch(limparProfessor());
         navigate("/professor/cadastro");
     }
@@ -23,14 +24,14 @@ const ListarProfessor = () => {
         return [
             {
                 onClick: () => {
+                    dispatch(setAcao(ACAO_ATUALIZAR));
                     dispatch(setProfessor(professor));
                     navigate("/professor/cadastro");
                 }
             },
             {
                 onClick: () => {
-                    dispatch(setProfessor(professor));
-                    navigate("/professor/cadastro");
+                    dispatch(deleteProfessor(professor.id as number));
                 }
             }
         ]

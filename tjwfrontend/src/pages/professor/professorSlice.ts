@@ -13,6 +13,9 @@ export type ProfessorType = {
 
 const BACKEND_URL = 'http://localhost:9001/professor';
 
+export const ACAO_CADASTRAR = 'CADASTRAR_PROFESSOR';
+export const ACAO_ATUALIZAR = 'ATUALIZAR_PROFESSOR';
+
 const slice = createSlice({
     name: 'professor',
     initialState: {
@@ -24,6 +27,7 @@ const slice = createSlice({
             telefone: '',
             dataNascimento: '',
         } as ProfessorType,
+        acao: null
     },
     reducers: {
         setProfessor: (state, action) => {
@@ -41,11 +45,14 @@ const slice = createSlice({
         },
         limparProfessor: (state) => {
             state.professor = {} as ProfessorType;
+        },
+        setAcao: (state, action) => {
+            state.acao = action.payload;
         }
     }
 })
 
-export const { setProfessor, setListaProfessor, setCampoProfessor, limparProfessor } = slice.actions;
+export const { setProfessor, setListaProfessor, setCampoProfessor, limparProfessor, setAcao } = slice.actions;
 
 export const consultarProfessores = () => (dispatch : AppDispatch) => {
     axios.get(BACKEND_URL + '/')
@@ -63,7 +70,24 @@ export const postCriarProfessor = (professor : ProfessorType) => (dispatch : App
     )
 }
 
+export const putAtualizarProfessor = (id: number, professor: ProfessorType) => (dispatch: AppDispatch) => {
+    axios.put(BACKEND_URL + `/atualizar/${id}`, professor)
+        .then(_response => {
+            dispatch(consultarProfessores());
+            dispatch(limparProfessor());
+            dispatch(setAcao(null));
+        })
+}
+
+export const deleteProfessor = (id: number) => (dispatch: AppDispatch) => {
+    axios.delete(BACKEND_URL + `/${id}`)
+        .then(_response => {
+            dispatch(consultarProfessores());
+        })
+}
+
 export const getProfessor = (state: RootState) => state.professorSlice.professor;
 export const getListaProfessores = (state: RootState) => state.professorSlice.listaProfessores;
+export const getAcao = (state: RootState) => state.professorSlice.acao;
 
 export default slice.reducer;

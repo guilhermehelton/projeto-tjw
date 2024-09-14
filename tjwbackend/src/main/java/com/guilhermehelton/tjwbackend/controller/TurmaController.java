@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.guilhermehelton.tjwbackend.dto.TurmaInputTO;
 import com.guilhermehelton.tjwbackend.entity.Turma;
 import com.guilhermehelton.tjwbackend.service.TurmaService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,4 +38,8 @@ public class TurmaController {
         return service.atualizarTurma(id, turma);
     }
     
+    @DeleteMapping("/{id}")
+    public void removerTurma(@PathVariable Long id) {
+        service.removerTurma(id);
+    }
 }

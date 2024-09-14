@@ -23,6 +23,7 @@ body {
 .content-container {
   display: flex;
   justify-content: center;
+  color: #24244e;
   align-items: center;
   width: 100%;
   height: 100%;

@@ -3,13 +3,14 @@ package com.guilhermehelton.tjwbackend.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -40,8 +41,8 @@ public class Aluno {
     @Column(name = "telefone", nullable = false, length = 32)
     private String telefone;
 
-    @OneToMany
-    @JoinTable(name = "tbl_matricula", joinColumns = @JoinColumn(name = "id_turma"), inverseJoinColumns = @JoinColumn(name = "id_aluno"))
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Matricula> matriculas;
 
     @Column(name = "dataNascimento")

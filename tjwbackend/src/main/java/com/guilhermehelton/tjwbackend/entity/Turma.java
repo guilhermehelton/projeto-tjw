@@ -2,12 +2,11 @@ package com.guilhermehelton.tjwbackend.entity;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -27,6 +26,9 @@ public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "semestre", length = 11)
+    private String semestre;
     
     @OneToOne
     private Disciplina disciplina;
@@ -34,7 +36,6 @@ public class Turma {
     @ManyToOne
     private Professor professor;
 
-    @OneToMany
-    @JoinTable(name = "tbl_matricula", joinColumns = @JoinColumn(name = "id_aluno"), inverseJoinColumns = @JoinColumn(name = "id_turma"))
+    @OneToMany(mappedBy = "turma")
     private List<Matricula> alunos;
 }

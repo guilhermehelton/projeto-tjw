@@ -4,7 +4,7 @@ import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import Table, { ActionType } from "../../components/table/Table";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { AlunoType, consultarAlunos, getListaAlunos, limparAluno, setAluno } from "./alunoSlice";
+import { ACAO_ATUALIZAR, ACAO_CADASTRAR, AlunoType, consultarAlunos, deleteAluno, getListaAlunos, limparAluno, setAcao, setAluno } from "./alunoSlice";
 
 const ListarAluno = () => {
     const navigate = useNavigate();
@@ -16,6 +16,7 @@ const ListarAluno = () => {
     }, [])
 
     const handleCadastrar = () => {
+        dispatch(setAcao(ACAO_CADASTRAR));
         dispatch(limparAluno());
         navigate("/aluno/cadastro");
     }
@@ -24,14 +25,14 @@ const ListarAluno = () => {
         return [
             {
                 onClick: () => {
+                    dispatch(setAcao(ACAO_ATUALIZAR));
                     dispatch(setAluno(aluno));
                     navigate("/aluno/cadastro");
                 }
             },
             {
                 onClick: () => {
-                    dispatch(setAluno(aluno));
-                    navigate("/aluno/cadastro");
+                    dispatch(deleteAluno(aluno.id as number));
                 }
             }
         ]
