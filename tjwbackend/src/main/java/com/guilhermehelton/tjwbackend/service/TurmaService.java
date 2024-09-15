@@ -8,12 +8,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.guilhermehelton.tjwbackend.dto.AlunoInputTO;
 import com.guilhermehelton.tjwbackend.dto.TurmaInputTO;
 import com.guilhermehelton.tjwbackend.entity.Aluno;
 import com.guilhermehelton.tjwbackend.entity.Disciplina;
 import com.guilhermehelton.tjwbackend.entity.Matricula;
 import com.guilhermehelton.tjwbackend.entity.Professor;
 import com.guilhermehelton.tjwbackend.entity.Turma;
+import com.guilhermehelton.tjwbackend.repository.AlunoRepository;
 import com.guilhermehelton.tjwbackend.repository.DisciplinaRepository;
 import com.guilhermehelton.tjwbackend.repository.MatriculaRepository;
 import com.guilhermehelton.tjwbackend.repository.ProfessorRepository;
@@ -32,6 +34,9 @@ public class TurmaService {
 
     @Autowired
     private ProfessorRepository professorRepository;
+
+    @Autowired
+    private AlunoRepository alunoRepository;
 
     public Turma salvarTurma(TurmaInputTO turma) {
         Turma novaTurma = new Turma();
@@ -91,7 +96,9 @@ public class TurmaService {
                 if (alunoPreviamenteMatriculado.size() == 0) {
                     Matricula novaMatricula = new Matricula();
 
-                    novaMatricula.setAluno(aluno);
+                    Optional<Aluno> novoAluno = alunoRepository.findById(aluno.getId());
+
+                    novaMatricula.setAluno(novoAluno.get());
                     novaMatricula.setTurma(turmaSalva);
 
                     alunosMatriculados.add(matricula.save(novaMatricula));
