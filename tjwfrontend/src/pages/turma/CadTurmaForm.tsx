@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Select } from "../../components/select/Select";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks"
 import { consultarProfessores, getListaProfessores } from "../professor/professorSlice"
@@ -10,6 +10,8 @@ import { ACAO_ATUALIZAR, ACAO_CADASTRAR, addAlunoTurma, getAcao, getTurma, postC
 import Table from "../../components/table/Table";
 import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
+import SideBar from "../../components/sideBar/SideBar";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export const CadTurmaForm = () => {
     const navigate = useNavigate();
@@ -19,19 +21,20 @@ export const CadTurmaForm = () => {
     const alunos = useAppSelector(getListaAlunos);
     const disciplinas = useAppSelector(getListaDisciplina);
     const acao = useAppSelector(getAcao);
+    const {usuario, authToken} = useContext(AuthContext);
 
     useEffect(() => {
-        if(acao == null ) {
+        if (acao == null) {
             dispatch(setAcao(ACAO_CADASTRAR))
         }
         if (professores.length == 0) {
-            dispatch(consultarProfessores());
+            dispatch(consultarProfessores(authToken));
         }
         if (alunos.length == 0) {
-            dispatch(consultarAlunos());
+            dispatch(consultarAlunos(authToken));
         }
         if (disciplinas.length == 0) {
-            dispatch(consultarDisciplina());
+            dispatch(consultarDisciplina(authToken));
         }
     }, [])
 
@@ -50,7 +53,7 @@ export const CadTurmaForm = () => {
         const alunoSelecionado = alunos.filter(aluno => aluno.id == item.id)[0];
         const alunoPreviamenteAdicionado = turma.alunos.filter(aluno => aluno.id == alunoSelecionado.id)[0];
 
-        if(alunoPreviamenteAdicionado) {
+        if (alunoPreviamenteAdicionado) {
             return;
         }
         dispatch(addAlunoTurma(alunoSelecionado));
@@ -68,45 +71,52 @@ export const CadTurmaForm = () => {
 
     const handleCadastrar = () => {
         if (acao == ACAO_ATUALIZAR && turma.id != undefined) {
-            dispatch(putAtualizarTurma(turma.id, turma));
+            dispatch(putAtualizarTurma(turma.id, turma, authToken));
         } else if (acao == ACAO_CADASTRAR) {
             console.log(turma);
-            dispatch(postCriarTurma(turma));
+            dispatch(postCriarTurma(turma, authToken));
         }
         navigate('/turma')
     }
 
     return (
-        <div className="form-container">
-            <h2>{acao == ACAO_CADASTRAR ? 'Cadastro de turma' : 'Atualizar turma'}</h2>
+        <>
+            <div className='sidebar-wrapper'>
+                <SideBar />
+            </div>
+            <div className="content-container">
+                <div className="form-container">
+                    <h2>{acao == ACAO_CADASTRAR ? 'Cadastro de turma' : 'Atualizar turma'}</h2>
 
-            <div className="form-row">
-                <Input id="semestre" label="Semestre" name="semestre" value={turma.semestre ? turma.semestre : ''}
-                    onChange={(e) => dispatch(setSemestre(e.target.value))} />
+                    <div className="form-row">
+                        <Input id="semestre" label="Semestre" name="semestre" value={turma.semestre ? turma.semestre : ''}
+                            onChange={(e) => dispatch(setSemestre(e.target.value))} />
 
-                <Select label="Disciplina" id="select-disciplina" name="select-disciplina"
-                    items={formatListSelect(disciplinas)} onSelect={(e) => handleSelectDisciplina(e)} />
+                        <Select label="Disciplina" id="select-disciplina" name="select-disciplina"
+                            items={formatListSelect(disciplinas)} onSelect={(e) => handleSelectDisciplina(e)} />
+                    </div>
+                    <div className="form-row">
+                        <Select label="Professor" id="select-professor" name="select-professor"
+                            items={formatListSelect(professores)} onSelect={(e) => handleSelectProfessor(e)} />
+                    </div>
+                    <div className="form-row">
+                        <SelectAutocomplete label="Adicionar alunos" id="select-aluno" name="select-aluno"
+                            items={formatListSelect(alunos)} onSelect={(e) => handleSelectAluno(e)} />
+                    </div>
+                    <div className="form-row"><span style={{ fontWeight: '600' }}>Alunos matriculados</span></div>
+                    <div className="form-row">
+                        <Table list={turma.alunos} keys={['nome', 'email', 'telefone']}>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                        </Table>
+                    </div>
+                    <div className="form-row" style={{ marginTop: '50px' }}>
+                        <Button onClick={(_e) => navigate("/turma")} className="no-margin-left" isSecondary name="Cancelar" />
+                        <Button onClick={(_e) => handleCadastrar()} name="Confirmar" />
+                    </div>
+                </div>
             </div>
-            <div className="form-row">
-                <Select label="Professor" id="select-professor" name="select-professor"
-                    items={formatListSelect(professores)} onSelect={(e) => handleSelectProfessor(e)} />
-            </div>
-            <div className="form-row">
-                <SelectAutocomplete label="Adicionar alunos" id="select-aluno" name="select-aluno"
-                    items={formatListSelect(alunos)} onSelect={(e) => handleSelectAluno(e)} />
-            </div>
-            <div className="form-row"><span style={{ fontWeight: '600' }}>Alunos matriculados</span></div>
-            <div className="form-row">
-                <Table list={turma.alunos} keys={['nome', 'email', 'telefone']}>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Telefone</th>
-                </Table>
-            </div>
-            <div className="form-row" style={{marginTop: '50px'}}>
-                <Button onClick={(_e) => navigate("/turma")} className="no-margin-left" isSecondary name="Cancelar" />
-                <Button onClick={(_e) => handleCadastrar()} name="Confirmar" />
-            </div>
-        </div>
+        </>
     )
 }

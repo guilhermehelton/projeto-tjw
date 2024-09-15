@@ -1,17 +1,20 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { ACAO_ATUALIZAR, ACAO_CADASTRAR, consultarDisciplina, deleteDisciplina, DisciplinaType, getListaDisciplina, limparDisciplina, setAcao, setDisciplina } from "./disciplinaSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import Table, { ActionType } from "../../components/table/Table";
 import Button from "../../components/button/Button";
+import SideBar from "../../components/sideBar/SideBar";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export const ListarDisciplina = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const listaDisciplina = useAppSelector(getListaDisciplina);
+    const {usuario, authToken} = useContext(AuthContext);
 
     useEffect(() => {
-        dispatch(consultarDisciplina());
+        dispatch(consultarDisciplina(authToken));
     }, [])
 
     const handleCadastrar = () => {
@@ -31,22 +34,29 @@ export const ListarDisciplina = () => {
             },
             {
                 onClick: () => {
-                    dispatch(deleteDisciplina(disciplina.id as number));
+                    dispatch(deleteDisciplina(disciplina.id as number, authToken));
                 }
             }
         ]
     }
 
     return (
-        <div className="table-container">
-            <h2>Lista de disciplinas</h2>
-            <div className="form-row" style={{ justifyContent: 'flex-end', width: '80%', marginBottom: '1em' }}>
-                <Button onClick={(_e) => handleCadastrar()} name="Cadastrar" />
+        <>
+            <div className='sidebar-wrapper'>
+                <SideBar />
             </div>
-            <Table actions={(disciplina: DisciplinaType) => acoes(disciplina)} list={listaDisciplina} keys={['nome']}>
-                <th>Nome</th>
-                <th style={{ width: '10%' }}>Ações</th>
-            </Table>
-        </div>
+            <div className="content-container">
+                <div className="table-container">
+                    <h2>Lista de disciplinas</h2>
+                    <div className="form-row" style={{ justifyContent: 'flex-end', width: '80%', marginBottom: '1em' }}>
+                        <Button onClick={(_e) => handleCadastrar()} name="Cadastrar" />
+                    </div>
+                    <Table actions={(disciplina: DisciplinaType) => acoes(disciplina)} list={listaDisciplina} keys={['nome']}>
+                        <th>Nome</th>
+                        <th style={{ width: '10%' }}>Ações</th>
+                    </Table>
+                </div>
+            </div>
+        </>
     )
 }

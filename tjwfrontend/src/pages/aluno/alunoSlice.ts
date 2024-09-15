@@ -65,35 +65,51 @@ const slice = createSlice({
 
 export const { setAluno, setListaAlunos, setCampoAluno, limparAluno, setAcao } = slice.actions;
 
-export const consultarAlunos = () => (dispatch : AppDispatch) => {
-    axios.get(BACKEND_URL + '/')
+export const consultarAlunos = (token : string) => (dispatch : AppDispatch) => {
+    axios.get(BACKEND_URL + '/', {
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        }
+    })
         .then(response => {
             dispatch(setListaAlunos(response.data));
         })
 }
 
-export const postCriarAluno = (aluno : AlunoType) => (dispatch : AppDispatch) => {
-    axios.post(BACKEND_URL + '/criar', aluno)
+export const postCriarAluno = (aluno : AlunoType, token: string) => (dispatch : AppDispatch) => {
+    axios.post(BACKEND_URL + '/criar', aluno, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_reponse => {
-            dispatch(consultarAlunos());
+            dispatch(consultarAlunos(token));
             dispatch(limparAluno());
         }
     )
 }
 
-export const putAtualizarAluno = (id: number, aluno: AlunoType) => (dispatch: AppDispatch) => {
-    axios.put(BACKEND_URL + `/atualizar/${id}`, aluno)
+export const putAtualizarAluno = (id: number, aluno: AlunoType, token : string) => (dispatch: AppDispatch) => {
+    axios.put(BACKEND_URL + `/atualizar/${id}`, aluno, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarAlunos());
+            dispatch(consultarAlunos(token));
             dispatch(limparAluno());
             dispatch(setAcao(null));
         })
 }
 
-export const deleteAluno = (id: number) => (dispatch: AppDispatch) => {
-    axios.delete(BACKEND_URL + `/${id}`)
+export const deleteAluno = (id: number, token : string) => (dispatch: AppDispatch) => {
+    axios.delete(BACKEND_URL + `/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarAlunos());
+            dispatch(consultarAlunos(token));
         })
 }
 

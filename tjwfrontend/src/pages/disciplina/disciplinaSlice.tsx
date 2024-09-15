@@ -46,35 +46,51 @@ const slice = createSlice({
 
 export const { setDisciplina, setListaDisciplina, setCampoDisciplina, limparDisciplina, setAcao } = slice.actions;
 
-export const consultarDisciplina = () => (dispatch : AppDispatch) => {
-    axios.get(BACKEND_URL + '/')
+export const consultarDisciplina = (token : string) => (dispatch : AppDispatch) => {
+    axios.get(BACKEND_URL + '/', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => {
             dispatch(setListaDisciplina(response.data));
         })
 }
 
-export const postCriarDisciplina = (disciplina : DisciplinaType) => (dispatch : AppDispatch) => {
-    axios.post(BACKEND_URL + '/criar', disciplina)
+export const postCriarDisciplina = (disciplina : DisciplinaType, token: string) => (dispatch : AppDispatch) => {
+    axios.post(BACKEND_URL + '/criar', disciplina, {
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        }
+    })
         .then(_reponse => {
-            dispatch(consultarDisciplina());
+            dispatch(consultarDisciplina(token));
             dispatch(limparDisciplina());
         }
     )
 }
 
-export const putAtualizarDisciplina = (id: number, disciplina: DisciplinaType) => (dispatch: AppDispatch) => {
-    axios.put(BACKEND_URL + `/atualizar/${id}`, disciplina)
+export const putAtualizarDisciplina = (id: number, disciplina: DisciplinaType, token: string) => (dispatch: AppDispatch) => {
+    axios.put(BACKEND_URL + `/atualizar/${id}`, disciplina, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarDisciplina());
+            dispatch(consultarDisciplina(token));
             dispatch(limparDisciplina());
             dispatch(setAcao(null));
         })
 }
 
-export const deleteDisciplina = (id: number) => (dispatch: AppDispatch) => {
-    axios.delete(BACKEND_URL + `/${id}`)
+export const deleteDisciplina = (id: number, token: string) => (dispatch: AppDispatch) => {
+    axios.delete(BACKEND_URL + `/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarDisciplina());
+            dispatch(consultarDisciplina(token));
         })
 }
 

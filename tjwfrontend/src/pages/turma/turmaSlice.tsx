@@ -4,6 +4,7 @@ import { DisciplinaType } from "../disciplina/disciplinaSlice";
 import { AlunoType } from "../aluno/alunoSlice";
 import { AppDispatch, RootState } from "../../redux/store";
 import axios from "axios";
+import { serializeStringToLocalDate } from "../utils/FormatData";
 
 export type TurmaType = {
     id?: number,
@@ -64,36 +65,68 @@ const slice = createSlice({
 export const { setTurma, setListaTurma, setProfessorTurma,
         setDisciplinaTurma, addAlunoTurma, setSemestre, limparTurma, setAcao } = slice.actions;
 
-export const consultarTurmas = () => (dispatch : AppDispatch) => {
-    axios.get(BACKEND_URL + '/')
+export const consultarTurmas = (token: string) => (dispatch : AppDispatch) => {
+    axios.get(BACKEND_URL + '/', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => {
             dispatch(setListaTurma(response.data));
         })
 }
 
-export const postCriarTurma = (turma : TurmaType) => (dispatch : AppDispatch) => {
-    axios.post(BACKEND_URL + '/criar', turma)
+export const postCriarTurma = (turma : TurmaType, token: string) => (dispatch : AppDispatch) => {
+    axios.post(BACKEND_URL + '/criar', preparaTurmaEnvio(turma), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_reponse => {
-            dispatch(consultarTurmas());
+            dispatch(consultarTurmas(token));
             dispatch(limparTurma());
         }
     )
 }
 
-export const putAtualizarTurma = (id: number, turma: TurmaType) => (dispatch: AppDispatch) => {
-    axios.put(BACKEND_URL + `/atualizar/${id}`, turma)
+export const putAtualizarTurma = (id: number, turma: TurmaType, token: string) => (dispatch: AppDispatch) => {
+    axios.put(BACKEND_URL + `/atualizar/${id}`, preparaTurmaEnvio(turma), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarTurmas());
+            dispatch(consultarTurmas(token));
             dispatch(limparTurma());
             dispatch(setAcao(null));
         })
 }
 
-export const deleteTurma = (id: number) => (dispatch: AppDispatch) => {
-    axios.delete(BACKEND_URL + `/${id}`)
+export const deleteTurma = (id: number, token: string) => (dispatch: AppDispatch) => {
+    axios.delete(BACKEND_URL + `/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(_response => {
-            dispatch(consultarTurmas());
+            dispatch(consultarTurmas(token));
         })
+}
+
+const preparaTurmaEnvio = (turma: TurmaType) : TurmaType => {
+    return {
+        ...turma,
+        alunos: turma.alunos.map(aluno => {
+            return {
+                ...aluno,
+                dataNascimento: serializeStringToLocalDate(aluno.dataNascimento),
+            }
+        }),
+        professor: {
+            ...turma.professor,
+            dataNascimento: serializeStringToLocalDate(turma.professor.dataNascimento)
+        }
+    }
 }
 
 export const getTurma = (state: RootState) => state.turmaSlice.turma;
