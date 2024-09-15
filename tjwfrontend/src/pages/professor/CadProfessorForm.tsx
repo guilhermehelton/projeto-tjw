@@ -7,6 +7,7 @@ import Button from "../../components/button/Button";
 import { handleCpfInput, handleDataInput, handleTelInput } from "../utils/MaskInputHandle";
 import SideBar from "../../components/sideBar/SideBar";
 import { AuthContext } from "../../contexts/AuthContext";
+import { isDataValida } from "../utils/ValidDate";
 
 const CadProfessorForm = () => {
     const navigate = useNavigate();
@@ -34,7 +35,10 @@ const CadProfessorForm = () => {
     }
 
     const handleCadastrar = () => {
-        console.log(professor)
+        if(!isDataValida(professor.dataNascimento)) {
+            alert('Informe a data no padrão dd/MM/yyyy')
+            return;
+        }
         if (acao == ACAO_ATUALIZAR && professor.id != undefined) {
             dispatch(putAtualizarProfessor(professor.id, professor, authToken));
         } else if (acao == ACAO_CADASTRAR) {

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../redux/store";
 import axios from "axios";
+import { convertDateFormat } from "../utils/FormatData";
 
 export type ProfessorType = {
     id?: number,
@@ -32,9 +33,16 @@ const slice = createSlice({
     reducers: {
         setProfessor: (state, action) => {
             state.professor = {...action.payload };
+            state.professor.dataNascimento = convertDateFormat(action.payload.dataNascimento);
         },
         setListaProfessor: (state, action) => {
             state.listaProfessores = [...action.payload];
+            state.listaProfessores = action.payload.map((elemento : ProfessorType) => {
+                return {
+                    ...elemento,
+                    dataNascimento: convertDateFormat(elemento.dataNascimento),
+                }
+            });
         },
         setCampoProfessor: (state, action) => {
             const { id, value } = action.payload as { id : keyof ProfessorType, value : ProfessorType[keyof ProfessorType]};

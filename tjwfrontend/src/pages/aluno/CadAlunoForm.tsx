@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { handleCpfInput, handleDataInput, handleTelInput } from "../utils/MaskInputHandle";
 import SideBar from "../../components/sideBar/SideBar";
 import { AuthContext } from "../../contexts/AuthContext";
+import { isDataValida } from "../utils/ValidDate";
 
 const CadAlunoForm = () => {
     const navigate = useNavigate();
@@ -35,6 +36,11 @@ const CadAlunoForm = () => {
     }
 
     const handleCadastrar = () => {
+        if(!isDataValida(aluno.dataNascimento)) {
+            alert('Informe a data no padrão dd/MM/yyyy')
+            return;
+        }
+
         if (acao == ACAO_ATUALIZAR && aluno.id != undefined) {
             dispatch(putAtualizarAluno(aluno.id, aluno, authToken));
         } else if (acao == ACAO_CADASTRAR) {
