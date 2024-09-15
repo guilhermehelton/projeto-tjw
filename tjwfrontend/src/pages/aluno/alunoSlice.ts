@@ -2,6 +2,7 @@ import React from "react";
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../redux/store";
 import axios from "axios";
+import { convertDateFormat } from "../utils/FormatData";
 
 export type AlunoType = {
     id?: number,
@@ -33,14 +34,23 @@ const slice = createSlice({
     reducers: {
         setAluno: (state, action) => {
             state.aluno = {...action.payload };
+            state.aluno.dataNascimento = convertDateFormat(action.payload.dataNascimento);
         },
         setListaAlunos: (state, action) => {
-            state.listaAlunos = [...action.payload];
+            state.listaAlunos = action.payload.map((elemento : AlunoType) => {
+                return {
+                    ...elemento,
+                    dataNascimento: convertDateFormat(elemento.dataNascimento),
+                }
+            });
         },
         setCampoAluno: (state, action) => {
             const { id, value } = action.payload as { id : keyof AlunoType, value : AlunoType[keyof AlunoType]};
             if(id != "id") {
                 state.aluno[id] = value as string;
+                if(id == "dataNascimento") {
+                    state.aluno[id] = convertDateFormat(value as string);
+                }
             }
             return
         },

@@ -8,16 +8,19 @@ type propsType = {
     placeholder?: string,
     label: string,
     value: string,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    maxLength?: number,
+    onChange: (e : React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const Input = (props: propsType) => {
-    const {id, className, value, name, placeholder, label, onChange} = props;
+    const {id, className, value, name, placeholder, label, onChange, maxLength} = props;
 
     return (
         <div className={`input-wrapper ${className}`}>
             <label>{label}</label>
-            <input id={id} name={name} value={value} placeholder={placeholder} onChange={e => onChange(e)}/>
+            <input id={id} name={name} value={value} placeholder={placeholder}
+                onChange={e => onChange(e)}
+                maxLength={maxLength}/>
         </div>
     )
 }

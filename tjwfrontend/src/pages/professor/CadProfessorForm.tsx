@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
+import { handleCpfInput, handleDataInput, handleTelInput } from "../utils/MaskInputHandle";
 
 const CadProfessorForm = () => {
     const navigate = useNavigate();
@@ -12,10 +13,20 @@ const CadProfessorForm = () => {
     const acao = useAppSelector(getAcao);
 
     const getCampoNameValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const campo = {
+        let campo = {
             id: event.target.id,
-            value: event.target.value
+            value: '',
+        };
+        if(event.target.id == "telefone") {
+            campo.value = handleTelInput(event.target.value);
         }
+        if(event.target.id == "cpf") {
+            campo.value = handleCpfInput(event.target.value);
+        }
+        if(event.target.id == "dataNascimento") {
+            campo.value = handleDataInput(event.target.value);
+        }
+
         return campo
     }
 
@@ -40,13 +51,13 @@ const CadProfessorForm = () => {
                     onChange={(e) => dispatch(setCampoProfessor(getCampoNameValue(e)))} />
             </div>
             <div className="form-row">
-                <Input className="no-margin-left" id="cpf" name="cpf" label="CPF" placeholder="###.###.###-##"
+                <Input className="no-margin-left" id="cpf" name="cpf" label="CPF" placeholder="###.###.###-##" maxLength={14}
                     value={professor.cpf ? professor.cpf : ''}
                     onChange={(e) => dispatch(setCampoProfessor(getCampoNameValue(e)))} />
-                <Input id="telefone" name="telefone" label="Telefone" placeholder="(DD)xxxxx-xxxx"
+                <Input id="telefone" name="telefone" label="Telefone" placeholder="(DD)xxxxx-xxxx" maxLength={15}
                     value={professor.telefone ? professor.telefone : ''}
                     onChange={(e) => dispatch(setCampoProfessor(getCampoNameValue(e)))} />
-                <Input id="dataNascimento" name="dataNascimento" label="Data de nascimento" placeholder="dd/MM/yyyy"
+                <Input id="dataNascimento" name="dataNascimento" label="Data de nascimento" placeholder="dd/MM/yyyy" maxLength={10}
                     value={professor.dataNascimento ? professor.dataNascimento : ''}
                     onChange={(e) => dispatch(setCampoProfessor(getCampoNameValue(e)))} />
             </div>
