@@ -50,7 +50,7 @@ export const Login = () => {
                     <Input id="email" label="Email" name="email" value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
                 <div className="form-row">
-                    <Input id="senha" label="Senha" name="senha" value={senha} onChange={e => setSenha(e.target.value)} />
+                    <Input password id="senha" label="Senha" name="senha" value={senha} onChange={e => setSenha(e.target.value)} />
                 </div>
                 <div className="form-row">
                     <Button name="Criar uma conta" onClick={() => handleNavigateToCadastro()} isSecondary />

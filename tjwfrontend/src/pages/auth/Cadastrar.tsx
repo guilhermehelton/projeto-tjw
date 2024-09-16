@@ -47,7 +47,7 @@ export const Cadastrar = () => {
                 <Input id="email" label="Email" name="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
             </div>
             <div className="form-row">
-                <Input id="senha" label="Senha" name="senha" onChange={(e) => setSenha(e.target.value)} value={senha}/>
+                <Input password id="senha" label="Senha" name="senha" onChange={(e) => setSenha(e.target.value)} value={senha}/>
             </div>
             <div className="form-row">
                 <Button name="Cancelar" isSecondary onClick={() => handleCancelar()}/>

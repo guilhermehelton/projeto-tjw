@@ -9,6 +9,7 @@ type propsType = {
     label: string,
     value: string,
     maxLength?: number,
+    password?: boolean,
     onChange: (e : React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -18,7 +19,7 @@ const Input = (props: propsType) => {
     return (
         <div className={`input-wrapper ${className}`}>
             <label>{label}</label>
-            <input id={id} name={name} value={value} placeholder={placeholder}
+            <input type={props.password ? 'password' : 'text'} id={id} name={name} value={value} placeholder={placeholder}
                 onChange={e => onChange(e)}
                 maxLength={maxLength}/>
         </div>
